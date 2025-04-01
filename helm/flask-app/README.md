@@ -17,7 +17,7 @@ helm install flask-app ./flask-app
 # Ou en spécifiant des valeurs personnalisées
 helm install flask-app ./flask-app -f values-custom.yaml
 ```
-  
+    
 ## Configuration
 
 | Paramètre | Description | Valeur par défaut |
