@@ -11,7 +11,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
       
@@ -27,10 +26,12 @@ jobs:
       
       - name: Set up kubeconfig
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig
-          chmod 600 kubeconfig
-          export KUBECONFIG=kubeconfig
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
       
       - name: Deploy with Helm
         run: |
-          helm upgrade --install flask-app ./helm/flask-app --namespace default --create-namespace
+          helm upgrade --install flask-app ./helm/flask-app --namespace default
+        env:
+          KUBECONFIG: $HOME/.kube/config
