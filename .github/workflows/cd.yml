@@ -4,7 +4,7 @@ on:
   push:
     branches: 
       - main
-  workflow_dispatch:  # Permet un déclenchement manuel
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -12,13 +12,11 @@ jobs:
     permissions:
       contents: write
       actions: write
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        with:
-          token: ${{ github.token }}  # Utilisez le token GitHub par défaut
-      
+
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
         with:
@@ -30,16 +28,12 @@ jobs:
           version: 'latest'
       
       - name: Set up kubeconfig
-  run: |
-    mkdir -p $HOME/.kube
-    echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
-    cat $HOME/.kube/config  # Ajoutez cette ligne pour vérifier le contenu
-    chmod 600 $HOME/.kube/config
-    export KUBECONFIG=$HOME/.kube/config
+        run: |
+          mkdir -p $HOME/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+          chmod 600 $HOME/.kube/config
       
       - name: Deploy with Helm
         run: |
+          export KUBECONFIG=$HOME/.kube/config
           helm upgrade --install flask-app ./helm/flask-app --namespace default
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          KUBECONFIG: $HOME/.kube/config
