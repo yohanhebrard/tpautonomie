@@ -1,25 +1,22 @@
 name: CD Pipeline
 
 on:
-  workflow_run:
-    workflows: ["CI Pipeline"]
-    types:
-      - completed
-    branches:
+  push:
+    branches: 
       - main
+  workflow_dispatch:  # Permet un déclenchement manuel
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write  # Permissions d'écriture
       packages: write
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}  # Utiliser le token GitHub par défaut
       
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
