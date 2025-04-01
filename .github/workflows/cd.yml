@@ -30,10 +30,12 @@ jobs:
           version: 'latest'
       
       - name: Set up kubeconfig
-        run: |
-          mkdir -p $HOME/.kube
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
-          chmod 600 $HOME/.kube/config
+  run: |
+    mkdir -p $HOME/.kube
+    echo "${{ secrets.KUBE_CONFIG }}" | base64 --decode > $HOME/.kube/config
+    cat $HOME/.kube/config  # Ajoutez cette ligne pour vérifier le contenu
+    chmod 600 $HOME/.kube/config
+    export KUBECONFIG=$HOME/.kube/config
       
       - name: Deploy with Helm
         run: |
