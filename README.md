@@ -4,7 +4,7 @@
 L'application utilise python en version 3.13.2, elle peut fonctionner avec d'autre version également.
 
 Pour garder un environnement de développement local propre j'utilise un virtualenv, pour l'utiliser depuis un linux/macos/wsl vous pouvez faire
-    
+     
 ```shell
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
