@@ -10,13 +10,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Permissions d'écriture
-      packages: write
+      contents: write
+      actions: write
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # Utiliser le token GitHub par défaut
+          token: ${{ github.token }}  # Utilisez le token GitHub par défaut
       
       - name: Install kubectl
         uses: azure/setup-kubectl@v3
@@ -38,5 +39,5 @@ jobs:
         run: |
           helm upgrade --install flask-app ./helm/flask-app --namespace default
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ github.token }}
           KUBECONFIG: $HOME/.kube/config
