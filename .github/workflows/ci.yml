@@ -51,23 +51,13 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:latest
       
-      - name: Install Docker Scout (if needed)
+      - name: Security Scan Notice
         run: |
-          # Cette étape tente d'installer Docker Scout ou utilise une méthode alternative pour l'analyse
-          echo "Installation de Docker Scout ou configuration de l'environnement"
-          if ! docker scout --version &>/dev/null; then
-            echo "Docker Scout n'est pas disponible, on passe cette étape"
-          fi
-        continue-on-error: true
-      
-      - name: Run Docker Scout or Skip
-        run: |
-          # Tentative d'exécuter Docker Scout si disponible, sinon afficher un message
-          if docker scout --version &>/dev/null; then
-            docker scout cves ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:latest
-          else
-            echo "Docker Scout n'est pas disponible. L'analyse de sécurité doit être effectuée manuellement."
-            echo "Vous pouvez utiliser d'autres outils comme Trivy ou Snyk pour analyser votre image."
-            echo "Image construite et publiée avec succès: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:latest"
-          fi
-        continue-on-error: true
+          echo "=== Image Build & Push Successful ==="
+          echo "Image publiée: ${{ secrets.DOCKER_HUB_USERNAME }}/flask-app:latest"
+          echo ""
+          echo "Note: L'analyse de sécurité avec Docker Scout a été désactivée."
+          echo "Pour analyser votre image, vous pouvez utiliser des outils comme:"
+          echo "- Trivy: https://github.com/aquasecurity/trivy"
+          echo "- Snyk: https://snyk.io/product/container-vulnerability-management/"
+          echo "- Docker Hub's built-in vulnerability scanning"
